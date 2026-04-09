@@ -1,0 +1,317 @@
+:root {
+    --bg-top: #fff7ef;
+    --bg-bottom: #fef1ff;
+    --surface: rgba(255, 255, 255, 0.76);
+    --surface-strong: rgba(255, 255, 255, 0.9);
+    --text-main: #5e4b66;
+    --text-soft: #7f6b87;
+    --accent-pink: #ff9cbc;
+    --accent-yellow: #ffd46f;
+    --accent-blue: #9edbff;
+    --accent-green: #aee6b0;
+    --shadow: 0 24px 60px rgba(210, 170, 210, 0.2);
+    --radius-xl: 36px;
+    --radius-lg: 24px;
+    --radius-md: 18px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Nunito", sans-serif;
+    color: var(--text-main);
+    background:
+        radial-gradient(circle at top left, rgba(255, 212, 111, 0.5), transparent 28%),
+        radial-gradient(circle at top right, rgba(158, 219, 255, 0.45), transparent 30%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(10px);
+    animation: float 9s ease-in-out infinite;
+}
+
+body::before {
+    width: 220px;
+    height: 220px;
+    top: 80px;
+    left: -60px;
+    background: rgba(255, 156, 188, 0.18);
+}
+
+body::after {
+    width: 260px;
+    height: 260px;
+    right: -70px;
+    bottom: 40px;
+    background: rgba(174, 230, 176, 0.2);
+    animation-delay: -3s;
+}
+
+.page-shell {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 32px 0 40px;
+}
+
+.hero,
+.about,
+.footer,
+.card {
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 244, 225, 0.8));
+    animation: fadeUp 0.9s ease both;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -40px -60px auto;
+    width: 220px;
+    height: 220px;
+    border-radius: 40% 60% 65% 35%;
+    background: linear-gradient(135deg, rgba(255, 156, 188, 0.35), rgba(158, 219, 255, 0.3));
+    animation: rotateBlob 16s linear infinite;
+}
+
+.hero__badge,
+.section-label {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #b56a8b;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.hero h1 {
+    max-width: 700px;
+    margin: 20px 0 16px;
+    font-size: clamp(2.3rem, 4vw, 4.3rem);
+    line-height: 1.05;
+}
+
+.hero__text {
+    max-width: 620px;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-soft);
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 0 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 800;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+}
+
+.button--primary {
+    color: white;
+    background: linear-gradient(135deg, #ff9cbc, #ffb36d);
+    box-shadow: 0 16px 28px rgba(255, 156, 188, 0.28);
+}
+
+.button--secondary {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 12px 24px rgba(150, 140, 170, 0.12);
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 28px;
+}
+
+.card {
+    padding: 28px 24px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    animation: fadeUp 0.9s ease both;
+}
+
+.card:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+.card:nth-child(3) {
+    animation-delay: 0.24s;
+}
+
+.card__icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 18px;
+    border-radius: 20px;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, rgba(255, 212, 111, 0.45), rgba(158, 219, 255, 0.45));
+}
+
+.card h2,
+.about h2 {
+    margin: 0 0 12px;
+    font-size: 1.45rem;
+}
+
+.card p,
+.about p,
+.highlight span,
+.footer p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.7;
+}
+
+.about {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+    margin-top: 28px;
+    padding: 32px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(244, 255, 245, 0.75));
+    animation: fadeUp 1s ease both;
+    animation-delay: 0.18s;
+}
+
+.about__content p {
+    max-width: 580px;
+    margin-top: 14px;
+}
+
+.about__highlights {
+    display: grid;
+    gap: 14px;
+}
+
+.highlight {
+    padding: 20px;
+    border-radius: var(--radius-md);
+    background: var(--surface-strong);
+}
+
+.highlight strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    color: #c56f92;
+}
+
+.footer {
+    margin-top: 24px;
+    padding: 20px 24px;
+    border-radius: 22px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.72);
+    animation: fadeUp 1.1s ease both;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-18px);
+    }
+}
+
+@keyframes rotateBlob {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 860px) {
+    .cards,
+    .about {
+        grid-template-columns: 1fr;
+    }
+
+    .hero,
+    .about {
+        padding: 28px;
+    }
+}
+
+@media (max-width: 560px) {
+    .page-shell {
+        width: min(100% - 20px, 1120px);
+        padding-top: 20px;
+    }
+
+    .hero {
+        padding: 24px;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .card,
+    .about,
+    .footer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}

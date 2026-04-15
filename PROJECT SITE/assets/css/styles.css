@@ -311,3 +311,118 @@ body::after {
         padding-right: 18px;
     }
 }
+
+.staff-section,
+.methodologies-section {
+    margin-top: 28px;
+    padding: 32px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(240, 248, 255, 0.75));
+    animation: fadeUp 1s ease both;
+}
+
+.staff-section h2,
+.methodologies-section h2 {
+    margin: 12px 0 24px;
+    font-size: 1.8rem;
+}
+
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.staff-card {
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    animation: fadeUp 0.9s ease both;
+}
+
+.staff-card__photo {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255, 212, 111, 0.45), rgba(158, 219, 255, 0.45));
+    display: grid;
+    place-items: center;
+}
+
+.staff-card__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.staff-card__placeholder {
+    font-size: 2.5rem;
+}
+
+.staff-card__info h3 {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+    color: var(--text-main);
+}
+
+.staff-card__position {
+    margin: 0 0 10px;
+    font-weight: 700;
+    color: #c56f92;
+    font-size: 0.95rem;
+}
+
+.staff-card__description {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+.methodologies-list {
+    display: grid;
+    gap: 18px;
+}
+
+.methodology-card {
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    animation: fadeUp 0.9s ease both;
+}
+
+.methodology-card h3 {
+    margin: 0 0 10px;
+    font-size: 1.3rem;
+    color: var(--text-main);
+}
+
+.methodology-card__short {
+    margin: 0 0 12px;
+    color: var(--text-soft);
+    line-height: 1.6;
+}
+
+.methodology-card__full {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 860px) {
+    .staff-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .staff-card__photo {
+        margin: 0 auto;
+    }
+}

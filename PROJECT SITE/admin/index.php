@@ -18,7 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             updateSiteSettings($_POST['settings'] ?? []);
             replacePrograms($_POST['programs'] ?? []);
             replaceHighlights($_POST['highlights'] ?? []);
-            $message = 'Изменения сохранены.';
+            
+            if (isset($_POST['action']) && $_POST['action'] === 'staff') {
+                saveStaff($_POST['staff'] ?? []);
+                $message = 'Сотрудники сохранены.';
+            } elseif (isset($_POST['action']) && $_POST['action'] === 'methodologies') {
+                saveMethodologies($_POST['methodologies'] ?? []);
+                $message = 'Методики сохранены.';
+            } else {
+                $message = 'Изменения сохранены.';
+            }
         } catch (Throwable $exception) {
             $error = 'Сохранение не удалось. Проверьте подключение к базе данных.';
         }
@@ -29,6 +38,8 @@ $site = fetchSiteData();
 $settings = $site['settings'];
 $programs = $site['programs'];
 $highlights = $site['highlights'];
+$staff = fetchStaff();
+$methodologies = fetchMethodologies();
 
 while (count($programs) < 4) {
     $programs[] = ['icon' => '', 'title' => '', 'description' => ''];
@@ -37,6 +48,16 @@ while (count($programs) < 4) {
 while (count($highlights) < 4) {
     $highlights[] = ['title' => '', 'description' => ''];
 }
+
+while (count($staff) < 3) {
+    $staff[] = ['name' => '', 'position' => '', 'description' => '', 'photo_filename' => ''];
+}
+
+while (count($methodologies) < 3) {
+    $methodologies[] = ['title' => '', 'description' => '', 'content' => ''];
+}
+
+$currentTab = $_GET['tab'] ?? 'main';
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -58,6 +79,12 @@ while (count($highlights) < 4) {
         </div>
     </header>
 
+    <nav class="admin-tabs">
+        <a class="admin-tab <?= $currentTab === 'main' ? 'admin-tab--active' : '' ?>" href="?tab=main">Главная</a>
+        <a class="admin-tab <?= $currentTab === 'staff' ? 'admin-tab--active' : '' ?>" href="?tab=staff">Сотрудники</a>
+        <a class="admin-tab <?= $currentTab === 'methodologies' ? 'admin-tab--active' : '' ?>" href="?tab=methodologies">Методики</a>
+    </nav>
+
     <main class="admin-layout">
         <?php if ($message !== ''): ?>
             <div class="notice notice--success"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
@@ -67,6 +94,7 @@ while (count($highlights) < 4) {
             <div class="notice notice--error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
         <?php endif; ?>
 
+        <?php if ($currentTab === 'main'): ?>
         <form method="post" class="admin-stack">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>">
 
@@ -168,6 +196,75 @@ while (count($highlights) < 4) {
 
             <button type="submit" class="admin-button admin-button--wide">Сохранить изменения</button>
         </form>
+        
+        <?php elseif ($currentTab === 'staff'): ?>
+        <form method="post" class="admin-stack">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="action" value="staff">
+
+            <section class="panel">
+                <h2>Наши сотрудники</h2>
+                <p style="color: var(--soft); margin-bottom: 20px;">Добавьте информацию о воспитателях и других сотрудниках детского сада.</p>
+                <div class="repeaters">
+                    <?php foreach ($staff as $index => $member): ?>
+                        <div class="repeater-card">
+                            <h3>Сотрудник <?= $index + 1 ?></h3>
+                            <label class="field">
+                                <span>ФИО</span>
+                                <input type="text" name="staff[<?= $index ?>][name]" value="<?= htmlspecialchars((string)($member['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                            </label>
+                            <label class="field">
+                                <span>Должность</span>
+                                <input type="text" name="staff[<?= $index ?>][position]" value="<?= htmlspecialchars((string)($member['position'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                            </label>
+                            <label class="field">
+                                <span>Описание</span>
+                                <textarea name="staff[<?= $index ?>][description]" rows="4"><?= htmlspecialchars((string)($member['description'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
+                            </label>
+                            <label class="field">
+                                <span>Имя файла фото</span>
+                                <input type="text" name="staff[<?= $index ?>][photo_filename]" value="<?= htmlspecialchars((string)($member['photo_filename'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="например: photo1.jpg">
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+
+            <button type="submit" class="admin-button admin-button--wide">Сохранить сотрудников</button>
+        </form>
+
+        <?php elseif ($currentTab === 'methodologies'): ?>
+        <form method="post" class="admin-stack">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="action" value="methodologies">
+
+            <section class="panel">
+                <h2>Методики работы</h2>
+                <p style="color: var(--soft); margin-bottom: 20px;">Опишите методики и подходы к обучению, используемые в детском саду.</p>
+                <div class="repeaters">
+                    <?php foreach ($methodologies as $index => $methodology): ?>
+                        <div class="repeater-card">
+                            <h3>Методика <?= $index + 1 ?></h3>
+                            <label class="field">
+                                <span>Название</span>
+                                <input type="text" name="methodologies[<?= $index ?>][title]" value="<?= htmlspecialchars((string)($methodology['title'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                            </label>
+                            <label class="field">
+                                <span>Краткое описание</span>
+                                <textarea name="methodologies[<?= $index ?>][description]" rows="3"><?= htmlspecialchars((string)($methodology['description'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
+                            </label>
+                            <label class="field field--full">
+                                <span>Подробное описание</span>
+                                <textarea name="methodologies[<?= $index ?>][content]" rows="6"><?= htmlspecialchars((string)($methodology['content'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+
+            <button type="submit" class="admin-button admin-button--wide">Сохранить методики</button>
+        </form>
+        <?php endif; ?>
     </main>
 </body>
 </html>

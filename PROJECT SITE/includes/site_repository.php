@@ -135,3 +135,82 @@ function replaceHighlights(array $highlights): void
 
     $pdo->commit();
 }
+
+function fetchStaff(): array
+{
+    try {
+        $pdo = db();
+        return $pdo->query('SELECT id, name, position, description, photo_filename, sort_order FROM staff ORDER BY sort_order, id')->fetchAll() ?: [];
+    } catch (Throwable $exception) {
+        return [];
+    }
+}
+
+function saveStaff(array $staffList): void
+{
+    $pdo = db();
+    $pdo->beginTransaction();
+    $pdo->exec('DELETE FROM staff');
+
+    $statement = $pdo->prepare(
+        'INSERT INTO staff (name, position, description, photo_filename, sort_order) VALUES (:name, :position, :description, :photo_filename, :sort_order)'
+    );
+
+    foreach ($staffList as $index => $staff) {
+        $name = trim((string)($staff['name'] ?? ''));
+        $position = trim((string)($staff['position'] ?? ''));
+
+        if ($name === '' && $position === '') {
+            continue;
+        }
+
+        $statement->execute([
+            'name' => $name,
+            'position' => $position,
+            'description' => trim((string)($staff['description'] ?? '')),
+            'photo_filename' => trim((string)($staff['photo_filename'] ?? '')),
+            'sort_order' => $index + 1,
+        ]);
+    }
+
+    $pdo->commit();
+}
+
+function fetchMethodologies(): array
+{
+    try {
+        $pdo = db();
+        return $pdo->query('SELECT id, title, description, content, sort_order FROM methodologies ORDER BY sort_order, id')->fetchAll() ?: [];
+    } catch (Throwable $exception) {
+        return [];
+    }
+}
+
+function saveMethodologies(array $methodologiesList): void
+{
+    $pdo = db();
+    $pdo->beginTransaction();
+    $pdo->exec('DELETE FROM methodologies');
+
+    $statement = $pdo->prepare(
+        'INSERT INTO methodologies (title, description, content, sort_order) VALUES (:title, :description, :content, :sort_order)'
+    );
+
+    foreach ($methodologiesList as $index => $methodology) {
+        $title = trim((string)($methodology['title'] ?? ''));
+        $description = trim((string)($methodology['description'] ?? ''));
+
+        if ($title === '' && $description === '') {
+            continue;
+        }
+
+        $statement->execute([
+            'title' => $title,
+            'description' => $description,
+            'content' => trim((string)($methodology['content'] ?? '')),
+            'sort_order' => $index + 1,
+        ]);
+    }
+
+    $pdo->commit();
+}
